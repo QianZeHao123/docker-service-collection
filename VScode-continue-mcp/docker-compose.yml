@@ -1,0 +1,51 @@
+name: vscode-continue-mcp
+
+services:
+  crawl4ai:
+    image: unclecode/crawl4ai:0.8.0
+    container_name: crawl4ai
+    env_file:
+      - .env
+    ports:
+      - "${CRAWL4AI_PORT:-11235}:11235"
+    shm_size: 1gb
+    restart: unless-stopped
+    networks:
+      - vscode-continue-mcp-network
+
+  searxng:
+    image: searxng/searxng:2026.3.6-0716de6bc
+    container_name: searxng
+    env_file:
+      - .env
+    ports:
+      - "${SEARXNG_PORT:-8080}:8080"
+    volumes:
+      - ./config/:/etc/searxng/
+      - ./data/:/var/cache/searxng/
+    restart: unless-stopped
+    networks:
+      - vscode-continue-mcp-network
+
+  searxng-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.searxng-mcp
+    container_name: searxng-mcp
+    env_file:
+      - .env
+    ports:
+      - "${SEARXNG_MCP_PORT:-8081}:${SEARXNG_MCP_PORT:-8081}"
+    restart: unless-stopped
+    networks:
+      - vscode-continue-mcp-network
+
+networks:
+  vscode-continue-mcp-network:
+    driver: bridge
+    name: vscode-continue-mcp-network
+    # add subnet for custom network
+    ipam:
+      config:
+        # different docker compose need to set different subnet to avoid conflict
+        - subnet: 10.200.1.0/24
