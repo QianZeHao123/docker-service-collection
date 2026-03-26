@@ -13,13 +13,25 @@ services:
     networks:
       - vscode-continue-mcp-network
 
+  # searxng:
+  #   image: searxng/searxng:2026.3.6-0716de6bc
+  #   container_name: searxng
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "${SEARXNG_PORT:-8080}:8080"
+  #   volumes:
+  #     - ./config/:/etc/searxng/
+  #     - ./data/:/var/cache/searxng/
+  #   restart: unless-stopped
+  #   networks:
+  #     - vscode-continue-mcp-network
+
   searxng:
     image: searxng/searxng:2026.3.6-0716de6bc
     container_name: searxng
     env_file:
       - .env
-    ports:
-      - "${SEARXNG_PORT:-8080}:8080"
     volumes:
       - ./config/:/etc/searxng/
       - ./data/:/var/cache/searxng/
