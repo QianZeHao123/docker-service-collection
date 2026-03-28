@@ -1,4 +1,4 @@
-name: vscode-continue-mcp
+name: mcp-manager
 
 services:
   crawl4ai:
@@ -10,7 +10,6 @@ services:
     restart: unless-stopped
     networks:
       - mcp-manager-network
-
 
   searxng:
     image: searxng/searxng:2026.3.6-0716de6bc
@@ -24,7 +23,7 @@ services:
     networks:
       - mcp-manager-network
 
-  searxng-mcp:
+  mcp-manager:
     build:
       context: .
       dockerfile: Dockerfile.mcp-manager
